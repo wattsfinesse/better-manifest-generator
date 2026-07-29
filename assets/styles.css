@@ -1,7 +1,7 @@
 :root{
-      --bg:#0f1115; --panel:#161a22; --panel2:#1c2230; --text:#e7edf7; --muted:#97a6ba;
-      --line:#2a3446; --accent:#6ea8ff; --accent2:#7cf0c8; --warn:#ffbf6e; --danger:#ff7c7c;
-      --shadow:0 12px 35px rgba(0,0,0,.35);
+      --bg:#000000; --panel:#0d0d0d; --panel2:#151515; --text:#ffffff; --muted:#b8b8b8;
+      --line:#2c2c2c; --accent:#ffffff; --accent2:#e6e6e6; --warn:#ffffff; --danger:#d9d9d9;
+      --shadow:0 0 18px rgba(255,255,255,.12);
       --radius:18px;
       --mono: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       --sans: Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
@@ -10,8 +10,8 @@
     html,body{height:100%}
     body{
       margin:0; font-family:var(--sans); background:
-        radial-gradient(1200px 800px at 10% 0%, rgba(110,168,255,.12), transparent 50%),
-        radial-gradient(900px 700px at 90% 10%, rgba(124,240,200,.08), transparent 45%),
+        radial-gradient(1200px 800px at 10% 0%, rgba(255,255,255,.06), transparent 50%),
+        radial-gradient(900px 700px at 90% 10%, rgba(255,255,255,.03), transparent 45%),
         var(--bg);
       color:var(--text);
     }
@@ -30,15 +30,15 @@
     .brand{
       display:flex; align-items:center; gap:12px; margin-bottom:18px;
     }
-.logo {
+    .logo {
     width: 64px;
     height: 64px;
-    border-radius: 0;
+    border-radius: 8px;
     object-fit: cover;
     border: 2px solid rgba(255,255,255,.15);
-    box-shadow: 0 0 10px rgba(0,0,0,.35);
+    background:#000;
+    box-shadow:0 0 15px rgba(255,255,255,.35);
     flex-shrink: 0;
-    display: block;
 }
     h1{font-size:22px; margin:0 0 4px}
     .sub{color:var(--muted); font-size:13px; line-height:1.5}
@@ -69,11 +69,11 @@
       padding:10px 14px; border-radius:14px; cursor:pointer; transition:.15s ease;
       box-shadow:var(--shadow);
     }
-    .btn:hover,.pill:hover{transform:translateY(-1px); border-color:#3b4a64}
-    .btn.primary{background:linear-gradient(135deg, rgba(110,168,255,.25), rgba(124,240,200,.18)); border-color:#47628d}
-    .btn.good{background:rgba(124,240,200,.12); border-color:#346c5a}
-    .btn.warn{background:rgba(255,191,110,.12); border-color:#6f5433}
-    .btn.danger{background:rgba(255,124,124,.12); border-color:#754141}
+    .btn:hover,.pill:hover{transform:translateY(-1px); border-color:#ffffff}
+    .btn.primary{background:#111; border-color:#ffffff}
+    .btn.good{background:#111; border-color:#ffffff}
+    .btn.warn{background:#111; border-color:#ffffff}
+    .btn.danger{background:#111; border-color:#ffffff}
     .panel{
       border:1px solid var(--line); border-radius:var(--radius); background:rgba(22,26,34,.9);
       box-shadow:var(--shadow); overflow:hidden;
@@ -104,7 +104,7 @@
     }
     textarea{min-height:140px; font-family:var(--mono); resize:vertical}
     input::placeholder,textarea::placeholder{color:#708197}
-    input:focus,select:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(110,168,255,.12)}
+    input:focus,select:focus,textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,255,255,.06)}
     .hint{color:var(--muted); font-size:12px; line-height:1.45}
     .row-head{
       display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap
@@ -128,7 +128,7 @@
       background:rgba(255,255,255,.03)
     }
     .chip.green{border-color:#2d6d58; background:rgba(124,240,200,.12)}
-    .chip.blue{border-color:#34547e; background:rgba(110,168,255,.12)}
+    .chip.blue{border-color:#34547e; background:rgba(255,255,255,.06)}
     .chip.orange{border-color:#6f5433; background:rgba(255,191,110,.12)}
     .chip.red{border-color:#754141; background:rgba(255,124,124,.12)}
     .output-grid{display:grid; gap:14px}
