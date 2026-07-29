@@ -899,10 +899,10 @@
         text: JSON.stringify(manifest, null, 2),
         manifest,
         problems,
-        filename: kind === 'behavior' ? 'behavior-manifest.json'
-          : kind === 'resource' ? 'resource-manifest.json'
-          : kind === 'world' ? 'world-template-manifest.json'
-          : 'skin-pack-manifest.json',
+        filename: kind === 'behavior' ? 'manifest.json'
+          : kind === 'resource' ? 'manifest.json'
+          : kind === 'world' ? 'manifest.json'
+          : 'manifest.json',
       };
     });
 
