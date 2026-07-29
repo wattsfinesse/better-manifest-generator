@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+---
+layout: null
+---
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WATTS MANIFEST GENERATOR</title>
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <img class="logo" src="./assets/profile.png" alt="Watts Profile" />
+        <div>
+          <h1>WATTS MANIFEST GENERATOR</h1>
+          <div class="sub">A standalone Bedrock manifest builder website with V2/V3 support, packs, modules, dependencies, subpacks, settings, copy, and download.</div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>What this builder includes</h3>
+        <ul>
+          <li>V2 and V3 format switching</li>
+          <li>Behavior, Resource, Add-ons, World Template, and Skin Pack presets</li>
+          <li>UUID generation and JSON export</li>
+          <li>Modules, dependencies, capabilities, subpacks, and v3 settings</li>
+          <li>Copy, download, and import existing JSON</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Current mode</h3>
+        <div class="pill-row" id="modePills"></div>
+        <div class="status" id="modeStatus"></div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Links</h3>
+        <div class="pill-row">
+          <a class="pill small" href="https://learn.microsoft.com/en-us/minecraft/creator/reference/content/addonsreference/packmanifest?view=minecraft-bedrock-stable" target="_blank" rel="noreferrer">Manifest docs</a>
+          <a class="pill small" href="https://learn.microsoft.com/en-us/minecraft/creator/reference/content/manifestreference/dependency?view=minecraft-bedrock-stable" target="_blank" rel="noreferrer">Dependencies</a>
+          <a class="pill small" href="https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/minecraft/server/minecraft-server?view=minecraft-bedrock-stable" target="_blank" rel="noreferrer">@minecraft/server</a>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="titleblock">
+          <h2>Manifest generator</h2>
+          <p>Build a Minecraft Bedrock <code class="inline">manifest.json</code> with the same core features as the reference tool, plus a few safety checks and cleaner export controls.</p>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="generateBtn">Generate JSON</button>
+          <button class="btn good" id="copyAllBtn">Copy output</button>
+          <button class="btn warn" id="downloadAllBtn">Download output</button>
+          <label class="btn" style="display:inline-flex; align-items:center; gap:8px;">
+            Import JSON
+            <input id="importFile" type="file" accept=".json,application/json" hidden>
+          </label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>1. Manifest version and pack preset</h3>
+        <div class="content section">
+          <div class="switch-row" id="versionButtons"></div>
+          <div class="switch-row" id="packButtons"></div>
+          <div class="warnbox" id="packNote">V3 uses string versions, while V2 can switch between array and string output.</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>2. General settings</h3>
+        <div class="content section">
+          <div class="two">
+            <div class="field">
+              <label for="packName">Pack name</label>
+              <input id="packName" type="text" placeholder="My Pack" />
+            </div>
+            <div class="field">
+              <label for="packDescription">Description</label>
+              <input id="packDescription" type="text" placeholder="Short description" />
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="field">
+              <label for="headerUuid">Header UUID</label>
+              <div class="split">
+                <input id="headerUuid" type="text" placeholder="Generate a UUID" />
+                <button class="btn" id="regenHeaderUuid" type="button">Regenerate</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="packScope">Pack scope</label>
+              <select id="packScope">
+                <option value="">Any</option>
+                <option value="world">World</option>
+                <option value="global">Global</option>
+                <option value="any">Any</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="two">
+            <div class="field">
+              <label>Pack version</label>
+              <div class="split">
+                <input id="packVersion" type="text" placeholder="1.0.0" />
+                <button class="btn" id="togglePackVersionFmt" type="button">Switch format</button>
+              </div>
+              <div class="hint" id="packVersionHint"></div>
+            </div>
+            <div class="field">
+              <label>Min engine version</label>
+              <div class="split">
+                <input id="minEngineVersion" type="text" placeholder="1.20.0" />
+                <button class="btn" id="toggleEngineFmt" type="button">Switch format</button>
+              </div>
+              <div class="hint" id="engineVersionHint"></div>
+            </div>
+          </div>
+
+          <div class="two hidden" id="worldOptions">
+            <div class="field">
+              <label>Base game version</label>
+              <input id="baseGameVersion" type="text" placeholder="1.20.0" />
+            </div>
+            <div class="field">
+              <label class="label">World template options</label>
+              <div class="checkgrid">
+                <label class="check"><input id="allowRandomSeed" type="checkbox"> <span>Allow random seed</span></label>
+                <label class="check"><input id="lockTemplateOptions" type="checkbox"> <span>Lock template options</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>3. Modules</h3>
+        <div class="content section">
+          <div class="row-head">
+            <div class="hint">Add one or more modules. Behavior packs usually use <code class="inline">data</code> and script packs use <code class="inline">script</code>. Resource packs use <code class="inline">resources</code>.</div>
+            <div class="mini-actions">
+              <button class="btn" type="button" id="addModuleBtn">Add module</button>
+            </div>
+          </div>
+          <div id="modules" class="card-list"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>4. Dependencies and capabilities</h3>
+        <div class="content section">
+          <div>
+            <div class="row-head">
+              <strong>Dependencies</strong>
+              <button class="btn" type="button" id="addDependencyBtn">Add dependency</button>
+            </div>
+            <div id="dependencies" class="card-list"></div>
+          </div>
+
+          <div>
+            <div class="row-head">
+              <strong>Capabilities</strong>
+              <span class="hint">Enable only what your pack needs.</span>
+            </div>
+            <div class="checkgrid" id="capabilities"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>5. Subpacks and v3 settings</h3>
+        <div class="content section">
+          <div>
+            <div class="row-head">
+              <strong>Subpacks</strong>
+              <button class="btn" type="button" id="addSubpackBtn">Add subpack</button>
+            </div>
+            <div id="subpacks" class="card-list"></div>
+          </div>
+
+          <div>
+            <div class="row-head">
+              <strong>Custom settings (V3)</strong>
+              <button class="btn" type="button" id="addSettingBtn">Add setting</button>
+            </div>
+            <div class="hint">For V3 manifests, version fields become strings and pack settings can be declared as slider, toggle, dropdown, or label entries.</div>
+            <div id="settings" class="card-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>6. Metadata</h3>
+        <div class="content section">
+          <div class="three">
+            <div class="field">
+              <label for="authors">Authors</label>
+              <input id="authors" type="text" placeholder="Author1, Author2" />
+            </div>
+            <div class="field">
+              <label for="license">License</label>
+              <input id="license" type="text" placeholder="MIT" />
+            </div>
+            <div class="field">
+              <label for="url">URL</label>
+              <input id="url" type="url" placeholder="https://example.com" />
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="productType">Product Type</label>
+              <select id="productType">
+                <option value="">Leave blank</option>
+                <option value="default">default</option>
+                <option value="addon">addon</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Metadata guide</label>
+              <div class="warnbox" style="margin:0;">Choose default or addon. Leave blank to omit <code class="inline">product_type</code> from the JSON.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h3>7. Output</h3>
+        <div class="content">
+          <div class="output-grid" id="outputGrid"></div>
+          <div class="status" id="validationStatus"></div>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        <strong>Pack Settings Queries Note</strong>
+        <p>world.getPackSettings() doesn't work. Use the Molang queries below to retrieve pack setting values in-game instead.</p>
+        <p>
+          <a href="https://learn.microsoft.com/en-us/minecraft/creator/documents/addons/custompacksettings?view=minecraft-bedrock-stable&source=recommendations"
+             target="_blank"
+             rel="noopener noreferrer">Click here for more info</a>
+          about custom pack settings.
+        </p>
+        <p>
+          <a href="https://learn.microsoft.com/en-us/minecraft/creator/documents/buildingsubpacks?view=minecraft-bedrock-stable"
+             target="_blank"
+             rel="noopener noreferrer">Click here for more info</a>
+          about building subpacks.
+        </p>
+        <p>You can retrieve the value of pack settings in-game using Molang with the following queries:</p>
+        <p><code class="inline">query.get_pack_setting('ns:slider_name')</code> - Returns the value of a slider</p>
+        <p><code class="inline">query.is_pack_setting_enabled('ns:toggle_name')</code> - Check if toggle is enabled</p>
+        <p><code class="inline">query.is_pack_setting_selected('ns:dropdown_name', 'dropdown_option_name')</code> - Check if a dropdown option is selected</p>
+      </div>
+    </main>
+  </div>
+
+<script src="./assets/script.js" defer></script>
+</body>
+</html>
